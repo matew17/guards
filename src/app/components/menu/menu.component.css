@@ -24,6 +24,9 @@ a {
   padding: 0 16px 0 16px;
   cursor: pointer;
 }
+.logout {
+  color: #ff8e8e;
+}
 .session {
   margin-left: 80%;
 }

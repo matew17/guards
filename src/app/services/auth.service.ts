@@ -5,13 +5,15 @@ import * as auth0 from "auth0-js";
 
 @Injectable()
 export class AuthService {
+  userProfile: any;
+
   auth0 = new auth0.WebAuth({
     clientID: "qudQhJIGLRAxN4dfOjF5jEVD3V6BRCdl",
     domain: "matew17.auth0.com",
     responseType: "token id_token",
     audience: "https://matew17.auth0.com/userinfo",
     redirectUri: "http://localhost:4200/callback",
-    scope: "openid"
+    scope: "openid profile"
   });
 
   constructor(private router: Router) {}
@@ -19,6 +21,13 @@ export class AuthService {
   public login(): void {
     this.auth0.authorize();
   }
+
+  public isAuthenticated(): boolean {
+    const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
+    return new Date().getTime() < expiresAt;
+  }
+
+  // Este metodo maneja la autenticacion, si es exitosa guarda en el local storage.
 
   public handleAuthentication(): void {
     this.auth0.parseHash((err, authResult) => {
@@ -55,8 +64,16 @@ export class AuthService {
     this.router.navigate(["/"]);
   }
 
-  public isAuthenticated(): boolean {
-    const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
-    return new Date().getTime() < expiresAt;
+  public getProfile(cb): void {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+      throw new Error("Access token must exist to fetch profile");
+    }
+    this.auth0.client.userInfo(accessToken, (err, profile) => {
+      if (profile) {
+        this.userProfile = profile;
+      }
+      cb(err, profile);
+    });
   }
 }

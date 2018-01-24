@@ -1,0 +1,29 @@
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+}
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 16px;
+  background-color: #1e1e1f;
+  max-width: 100%;
+  color: #fff;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+  padding: 0 16px 0 16px;
+  cursor: pointer;
+}
+.session {
+  margin-left: 80%;
+}

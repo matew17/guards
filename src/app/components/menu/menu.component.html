@@ -1,0 +1,24 @@
+<div class="menu">
+  <nav class="navbar">
+    <div>
+      <span>
+        <img src="./../../../assets/ngMed.png" width="40" alt="logo">
+      </span>
+    </div>
+    <div>
+      <span *ngFor="let item of items">
+        <a [routerLink]="item.url">
+          <span>{{item.name}}</span>
+        </a>
+      </span>
+    </div>
+    <div class="session">
+      <a *ngIf="!auth.isAuthenticated()" (click)="auth.login()">
+        Log In
+      </a>
+      <a *ngIf="auth.isAuthenticated()" (click)="auth.logout()">
+        Log Out
+      </a>
+    </div>
+  </nav>
+</div>

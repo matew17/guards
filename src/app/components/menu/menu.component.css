@@ -7,11 +7,11 @@
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
     0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
 }
-.navbar {
+.container {
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 8px 16px;
   background-color: #1e1e1f;
   max-width: 100%;
@@ -27,6 +27,6 @@ a {
 .logout {
   color: #ff8e8e;
 }
-.session {
-  margin-left: 80%;
+.items {
+  flex: 1;
 }

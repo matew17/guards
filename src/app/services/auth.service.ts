@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import "rxjs/add/operator/filter";
 import * as auth0 from "auth0-js";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { map } from "rxjs/operators/map";
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class AuthService {
@@ -15,19 +18,33 @@ export class AuthService {
     redirectUri: "http://localhost:4200/callback",
     scope: "openid profile"
   });
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   public login(): void {
     this.auth0.authorize();
   }
 
-  public isAuthenticated(): boolean {
+  public isAuthenticated() {
     const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
-    return new Date().getTime() < expiresAt;
+    if (localStorage.getItem("access_token")) {
+      return new Date().getTime() < expiresAt;
+    }
   }
 
-  // Este metodo maneja la autenticacion, si es exitosa guarda en el local storage.
+  getProfile(): Observable<any> {
+    const accessToken = localStorage.getItem("access_token");
+    const headers = new HttpHeaders().set(
+      "authorization",
+      "Bearer " + accessToken
+    );
+    return this.http.get("https://matew17.auth0.com/userinfo", {
+      headers: headers
+    });
+  }
+
+  // Este metodo se ejecuta en el callback,
+  // y valida si la autenticacion fue exitosa,
+  // si asi es guarda algunos datos en el local storage.
 
   public handleAuthentication(): void {
     this.auth0.parseHash((err, authResult) => {
@@ -37,7 +54,7 @@ export class AuthService {
           window.location.hash = "";
           this.setSession(authResult);
           this.router.navigate(["/home"]);
-        }, 3000);
+        }, 2500);
       } else if (err) {
         this.router.navigate(["/"]);
         console.log(err);
@@ -46,7 +63,6 @@ export class AuthService {
   }
 
   private setSession(authResult): void {
-    // Set the time that the access token will expire at
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     );
@@ -56,24 +72,9 @@ export class AuthService {
   }
 
   public logout(): void {
-    // Remove tokens and expiry time from localStorage
     localStorage.removeItem("access_token");
     localStorage.removeItem("id_token");
     localStorage.removeItem("expires_at");
-    // Go back to the home route
     this.router.navigate(["/"]);
-  }
-
-  public getProfile(cb): void {
-    const accessToken = localStorage.getItem("access_token");
-    if (!accessToken) {
-      throw new Error("Access token must exist to fetch profile");
-    }
-    this.auth0.client.userInfo(accessToken, (err, profile) => {
-      if (profile) {
-        this.userProfile = profile;
-      }
-      cb(err, profile);
-    });
   }
 }

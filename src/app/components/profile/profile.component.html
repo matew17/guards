@@ -1,0 +1,11 @@
+<div *ngIf="profile" class="container">
+  <div class="img">
+    <img src="{{profile?.picture}}" class="avatar" alt="avatar">
+  </div>
+  <div>
+    <h3>{{ profile?.nickname }}</h3>
+  </div>
+  <div>
+    <pre>{{ profile | json }}</pre>
+  </div>
+</div>

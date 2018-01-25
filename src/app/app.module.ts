@@ -8,13 +8,21 @@ import { HomeComponent } from "./components/home/home.component";
 import { CallbackComponent } from "./components/callback/callback.component";
 import { MenuComponent } from "./components/menu/menu.component";
 import { HttpClientModule } from "@angular/common/http";
-import { ProfileComponent } from './components/profile/profile.component';
-import { NoAutorizadoComponent } from './components/no-autorizado/no-autorizado.component';
+import { ProfileComponent } from "./components/profile/profile.component";
+import { NoAutorizadoComponent } from "./components/no-autorizado/no-autorizado.component";
+import { AuthGuard } from "./auth.guard";
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, CallbackComponent, MenuComponent, ProfileComponent, NoAutorizadoComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    CallbackComponent,
+    MenuComponent,
+    ProfileComponent,
+    NoAutorizadoComponent
+  ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
